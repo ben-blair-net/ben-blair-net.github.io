@@ -251,35 +251,59 @@
   }
 
   /* ── CERTS ───────────────────────────────────────── */
-  .cert-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
+  .cert-group-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
     margin-top: 2rem;
   }
 
-  .cert-chip {
-    background: var(--slate);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: border-color 0.15s;
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
   }
 
-  .cert-chip:hover { border-color: var(--blue); }
+  .cert-badge {
+    background: var(--slate);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: border-color 0.15s, transform 0.15s;
+  }
 
-  .cert-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--blue);
-    flex-shrink: 0;
+  .cert-badge:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .cert-badge img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+  }
+
+  .cert-badge-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--white);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .cert-badge-issuer {
+    font-size: 10px;
+    color: var(--muted2);
+    text-align: center;
+    font-family: var(--sans);
   }
 
   /* ── SKILLS ──────────────────────────────────────── */
@@ -551,14 +575,72 @@
 <!-- CERTS -->
 <section id="certs" style="padding-bottom:3rem;">
   <p class="section-label">Certifications</p>
+
+  <p class="cert-group-label">Cisco</p>
   <div class="cert-grid">
-    <div class="cert-chip"><span class="cert-dot"></span>CCNA</div>
-    <div class="cert-chip"><span class="cert-dot"></span>Security+</div>
-    <div class="cert-chip"><span class="cert-dot"></span>Network+</div>
-    <div class="cert-chip"><span class="cert-dot"></span>Cloud+</div>
-    <div class="cert-chip"><span class="cert-dot"></span>A+</div>
-    <div class="cert-chip"><span class="cert-dot"></span>Linux Essentials</div>
-    <div class="cert-chip"><span class="cert-dot"></span>CyberOps Associate</div>
+    <a class="cert-badge" href="https://cp.certmetrics.com/cisco/en/public/verify/credential" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/images/70d71df5-f3dc-4380-9b9d-f22513a70417/CCNARS.png" alt="CCNA badge">
+      <span class="cert-badge-name">CCNA</span>
+      <span class="cert-badge-issuer">Cisco</span>
+    </a>
+    <a class="cert-badge" href="https://cp.certmetrics.com/cisco/en/public/verify/credential" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/images/0a6d331e-8abf-4272-a949-33f754569a76/CCNACYBERS.png" alt="CCNA Cybersecurity badge">
+      <span class="cert-badge-name">CyberOps Associate</span>
+      <span class="cert-badge-issuer">Cisco</span>
+    </a>
+  </div>
+
+  <p class="cert-group-label">CompTIA — Core</p>
+  <div class="cert-grid">
+    <a class="cert-badge" href="https://www.credly.com/badges/61fea5e2-156c-4a8d-84af-f95f546bfe19/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/f6d62c5d-1e1d-4de6-92ee-8dc8c80b1c7b/image.png" alt="CompTIA A+ badge">
+      <span class="cert-badge-name">A+</span>
+      <span class="cert-badge-issuer">CompTIA</span>
+    </a>
+    <a class="cert-badge" href="https://www.credly.com/badges/728dd1d1-1271-4a41-87a9-18b8899e0abe/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/c70ba73e-3c8a-46fa-9d60-4a9af94ad662/image.png" alt="CompTIA Network+ badge">
+      <span class="cert-badge-name">Network+</span>
+      <span class="cert-badge-issuer">CompTIA</span>
+    </a>
+    <a class="cert-badge" href="https://www.credly.com/badges/7f4623e7-fe63-4e67-a8dc-fd117bcfbc2a/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/80d8a06a-c384-42bf-ad36-db81bce5adce/image.png" alt="CompTIA Security+ badge">
+      <span class="cert-badge-name">Security+</span>
+      <span class="cert-badge-issuer">CompTIA</span>
+    </a>
+    <a class="cert-badge" href="https://www.credly.com/badges/3a3cdb36-c483-474d-befd-919d66f1a70d/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/b2e3c623-cc4a-4f0c-8a3b-aa6231e138fe/image.png" alt="CompTIA Cloud+ badge">
+      <span class="cert-badge-name">Cloud+</span>
+      <span class="cert-badge-issuer">CompTIA</span>
+    </a>
+    <a class="cert-badge" href="https://www.credly.com/badges/6f5d7346-d7e2-4927-8009-1e37783975fd/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/1d36cb36-20fc-4961-8d70-6307c015d1aa/image.png" alt="Linux Essentials badge">
+      <span class="cert-badge-name">Linux Essentials</span>
+      <span class="cert-badge-issuer">LPI</span>
+    </a>
+  </div>
+
+  <p class="cert-group-label">CompTIA — Stackable</p>
+  <div class="cert-grid">
+    <a class="cert-badge" href="https://www.credly.com/badges/b988afa3-a603-46ed-a519-f30478d69764/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/7f7657b9-4d1b-4b8d-b5ee-5fdf6d7ccd71/image.png" alt="CIOS badge">
+      <span class="cert-badge-name">CIOS</span>
+      <span class="cert-badge-issuer">IT Operations Specialist</span>
+    </a>
+    <a class="cert-badge" href="https://www.credly.com/badges/5c56c46c-bd24-4caf-8738-9b21858af64b/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/8090280a-311f-425f-a1cd-a32770b5a444/image.png" alt="CSIS badge">
+      <span class="cert-badge-name">CSIS</span>
+      <span class="cert-badge-issuer">Secure Infrastructure Specialist</span>
+    </a>
+    <a class="cert-badge" href="https://www.credly.com/badges/24d938aa-bdbc-4e78-98df-5a4359829e4a/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/18218ce6-e7d4-4479-9500-b7499645b763/image.png" alt="CCAP badge">
+      <span class="cert-badge-name">CCAP</span>
+      <span class="cert-badge-issuer">Cloud Admin Professional</span>
+    </a>
+    <a class="cert-badge" href="https://www.credly.com/badges/924bdd33-ae7d-4a20-aa48-d60c3afb0e84/public_url" target="_blank" rel="noopener">
+      <img src="https://images.credly.com/size/220x220/images/9f54bf46-dc18-408c-a74e-2637facd1856/image.png" alt="CSCP badge">
+      <span class="cert-badge-name">CSCP</span>
+      <span class="cert-badge-issuer">Secure Cloud Professional</span>
+    </a>
   </div>
 </section>
 
