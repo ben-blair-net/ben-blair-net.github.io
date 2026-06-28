@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ben Blair — Cloud & Network Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #0B1120;
+    --slate:   #1E2D45;
+    --slate2:  #162236;
+    --blue:    #3B82F6;
+    --blue-d:  #2563EB;
+    --green:   #22C55E;
+    --muted:   #94A3B8;
+    --muted2:  #64748B;
+    --white:   #F8FAFC;
+    --border:  rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { color: #93C5FD; }
+
+  /* ── NAV ─────────────────────────────────────────── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11,17,32,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--green);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--muted);
+    transition: color 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  /* ── HERO ────────────────────────────────────────── */
+  .hero {
+    min-height: calc(100vh - 56px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5rem 2rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--green);
+    letter-spacing: 0.08em;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-sub {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-weight: 400;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-sub span { color: var(--blue); }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── TERMINAL ────────────────────────────────────── */
+  .terminal {
+    background: var(--slate2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 0;
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+  }
+
+  .terminal-bar {
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #FF5F57; }
+  .dot-y { background: #FEBC2E; }
+  .dot-g { background: #28C840; }
+
+  .terminal-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted2);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .terminal-body {
+    padding: 18px 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    min-height: 120px;
+  }
+
+  .prompt { color: var(--green); }
+  .cmd    { color: var(--white); }
+  .out    { color: var(--muted); display: block; margin-left: 0; }
+  .out-val{ color: #93C5FD; }
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--green);
+    vertical-align: -2px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{ opacity:1 } 50%{ opacity:0 } }
+
+  /* ── CTA BUTTONS ─────────────────────────────────── */
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--sans);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--blue-d); color: #fff; }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--border2);
+    color: var(--muted);
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+
+  /* ── SECTION SHELLS ──────────────────────────────── */
+  section { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-heading {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    color: var(--white);
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── CERTS ───────────────────────────────────────── */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-top: 2rem;
+  }
+
+  .cert-chip {
+    background: var(--slate);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.15s;
+  }
+
+  .cert-chip:hover { border-color: var(--blue); }
+
+  .cert-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+    flex-shrink: 0;
+  }
+
+  /* ── SKILLS ──────────────────────────────────────── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 2rem;
+  }
+
+  .skill-group {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+
+  .skill-group-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--blue);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    font-family: var(--mono);
+  }
+
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .skill-list li {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .skill-list li::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--muted2);
+  }
+
+  /* ── PROJECTS ────────────────────────────────────── */
+  .projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 2rem;
+  }
+
+  .project-card {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: border-color 0.15s;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .project-card:hover { border-color: var(--border2); }
+
+  .project-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted2);
+    margin-bottom: 0.5rem;
+  }
+
+  .project-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+
+  .project-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.25);
+    color: #93C5FD;
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 3px 9px;
+    border-radius: 4px;
+  }
+
+  .project-status {
+    font-size: 11px;
+    font-family: var(--mono);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-live  { background: var(--green); }
+  .status-build { background: #FBBF24; }
+  .status-plan  { background: var(--muted2); }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--blue);
+    font-family: var(--mono);
+    margin-top: 0.75rem;
+  }
+
+  .project-link svg { width: 12px; height: 12px; }
+
+  /* ── ABOUT ───────────────────────────────────────── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+
+  .about-text {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .about-text p + p { margin-top: 1rem; }
+
+  .about-details { display: flex; flex-direction: column; gap: 14px; }
+
+  .detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .detail-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted2);
+    min-width: 80px;
+    padding-top: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  .detail-val { color: var(--white); }
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-mono {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted2);
+  }
+
+  .footer-links { display: flex; gap: 1.5rem; }
+
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted2);
+    transition: color 0.15s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  /* ── RESPONSIVE ──────────────────────────────────── */
+  @media (max-width: 640px) {
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 1rem; }
+    section { padding: 3rem 1rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .project-card { grid-template-columns: 1fr; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">~/ben-blair</span>
+  <ul class="nav-links">
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+  <div class="hero">
+    <p class="hero-eyebrow">available for cloud &amp; network roles in Spokane, WA</p>
+    <h1>Ben Blair</h1>
+    <p class="hero-sub">Cloud &amp; Network <span>Infrastructure Engineer</span></p>
+    <p class="hero-desc">
+      WGU Computer Networking &amp; Cybersecurity student. CCNA-certified. Building automation tools for network and cloud infrastructure.
+    </p>
+
+    <div class="terminal" aria-label="Terminal demo of portfolio projects">
+      <div class="terminal-bar">
+        <span class="dot dot-r"></span>
+        <span class="dot dot-y"></span>
+        <span class="dot dot-g"></span>
+        <span class="terminal-title">bash — ben@infrastructure</span>
+      </div>
+      <div class="terminal-body" id="terminal-output">
+        <span class="prompt">$ </span><span class="cmd" id="typed-cmd"></span><span class="cursor" id="cursor"></span>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <a href="https://github.com/ben-blair-net" class="btn btn-primary" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        View on GitHub
+      </a>
+      <a href="mailto:ben@example.com" class="btn btn-ghost">Get in touch</a>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- CERTS -->
+<section id="certs" style="padding-bottom:3rem;">
+  <p class="section-label">Certifications</p>
+  <div class="cert-grid">
+    <div class="cert-chip"><span class="cert-dot"></span>CCNA</div>
+    <div class="cert-chip"><span class="cert-dot"></span>Security+</div>
+    <div class="cert-chip"><span class="cert-dot"></span>Network+</div>
+    <div class="cert-chip"><span class="cert-dot"></span>Cloud+</div>
+    <div class="cert-chip"><span class="cert-dot"></span>A+</div>
+    <div class="cert-chip"><span class="cert-dot"></span>Linux Essentials</div>
+    <div class="cert-chip"><span class="cert-dot"></span>CyberOps Associate</div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label">Projects</p>
+  <h2 class="section-heading">Infrastructure automation portfolio</h2>
+
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div>
+        <p class="project-number">01</p>
+        <p class="project-title">IP Geolocation Lookup Tool</p>
+        <p class="project-desc">
+          Command-line Python tool that queries the ip-api.com REST API for a given IP address and returns location, ISP, ASN, and timezone data. Supports single lookups and bulk file input. Results logged to timestamped CSV.
+        </p>
+        <div class="tag-row">
+          <span class="tag">Python</span>
+          <span class="tag">REST API</span>
+          <span class="tag">JSON</span>
+          <span class="tag">CSV</span>
+          <span class="tag">stdlib</span>
+        </div>
+        <a href="https://github.com/ben-blair-net/ip-geolocation-lookup" class="project-link" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          ben-blair-net/ip-geolocation-lookup
+        </a>
+      </div>
+      <div class="project-status">
+        <span class="status-dot status-live"></span>
+        <span style="color:var(--green)">live</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <p class="project-number">02</p>
+        <p class="project-title">Network Connectivity Checker</p>
+        <p class="project-desc">
+          Reads a list of hosts from CSV, pings each one via subprocess, checks a specified TCP port via socket, and logs reachability results with timestamps. Useful for rapid triage of multi-host outages.
+        </p>
+        <div class="tag-row">
+          <span class="tag">Python</span>
+          <span class="tag">subprocess</span>
+          <span class="tag">socket</span>
+          <span class="tag">logging</span>
+          <span class="tag">CSV</span>
+        </div>
+        <a href="https://github.com/ben-blair-net/network-connectivity-checker" class="project-link" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          ben-blair-net/network-connectivity-checker
+        </a>
+      </div>
+      <div class="project-status">
+        <span class="status-dot status-build"></span>
+        <span style="color:#FBBF24">in progress</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <p class="project-number">03</p>
+        <p class="project-title">Azure Resource Inventory</p>
+        <p class="project-desc">
+          Uses the Azure SDK for Python to authenticate to a subscription, enumerate all resources across a resource group, and export results to CSV. Demonstrates cloud API integration, credential handling, and data export workflows.
+        </p>
+        <div class="tag-row">
+          <span class="tag">Python</span>
+          <span class="tag">Azure SDK</span>
+          <span class="tag">OAuth2</span>
+          <span class="tag">CSV</span>
+          <span class="tag">cloud</span>
+        </div>
+        <a href="https://github.com/ben-blair-net/azure-resource-inventory" class="project-link" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          ben-blair-net/azure-resource-inventory
+        </a>
+      </div>
+      <div class="project-status">
+        <span class="status-dot status-plan"></span>
+        <span style="color:var(--muted)">planned</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label">Technical skills</p>
+  <h2 class="section-heading">Tools &amp; technologies</h2>
+
+  <div class="skills-grid">
+    <div class="skill-group">
+      <p class="skill-group-title">Networking</p>
+      <ul class="skill-list">
+        <li>Cisco IOS / routing &amp; switching</li>
+        <li>TCP/IP, OSPF, BGP, VLANs</li>
+        <li>Subnetting &amp; IP addressing</li>
+        <li>Wireshark / packet analysis</li>
+        <li>Firewall rules &amp; ACLs</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Cloud &amp; Infrastructure</p>
+      <ul class="skill-list">
+        <li>Microsoft Azure (IaaS, VNet)</li>
+        <li>Azure SDK for Python</li>
+        <li>VM provisioning &amp; management</li>
+        <li>Cloud networking concepts</li>
+        <li>Resource tagging &amp; inventory</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Automation &amp; Scripting</p>
+      <ul class="skill-list">
+        <li>Python 3 (stdlib + third-party)</li>
+        <li>Netmiko for network automation</li>
+        <li>Bash shell scripting</li>
+        <li>REST API integration</li>
+        <li>CSV / JSON data handling</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Security &amp; Systems</p>
+      <ul class="skill-list">
+        <li>Linux administration</li>
+        <li>Security monitoring concepts</li>
+        <li>CyberOps / SOC fundamentals</li>
+        <li>CompTIA security stack</li>
+        <li>Git &amp; GitHub</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">About</p>
+  <h2 class="section-heading">Background</h2>
+
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        I'm a computer networking and cybersecurity student at WGU completing my B.S., with a focus on building practical automation skills that translate directly to infrastructure and cloud engineering roles.
+      </p>
+      <p>
+        This portfolio represents a 6-week career sprint: three real projects that demonstrate I can write clean Python, interact with cloud APIs, and think like a network engineer — not just pass certification exams.
+      </p>
+      <p>
+        Currently open to cloud infrastructure, network engineering, and NOC/systems roles in the Spokane, WA area.
+      </p>
+    </div>
+    <div class="about-details">
+      <div class="detail-row">
+        <span class="detail-label">location</span>
+        <span class="detail-val">Spokane, WA</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">education</span>
+        <span class="detail-val">B.S. Computer Networking &amp; Cybersecurity — WGU (in progress)</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">focus</span>
+        <span class="detail-val">Cloud infrastructure, network automation, Python scripting</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">github</span>
+        <span class="detail-val"><a href="https://github.com/ben-blair-net">ben-blair-net</a></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">status</span>
+        <span class="detail-val" style="color:var(--green)">Open to opportunities</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-mono">Ben Blair &mdash; ben-blair-net</span>
+  <div class="footer-links">
+    <a href="https://github.com/ben-blair-net" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://linkedin.com/in/ben-blair" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+const sequences = [
+  {
+    cmd: "python ip_lookup.py 8.8.8.8",
+    output: [
+      '<span class="out">  IP Address : <span class="out-val">8.8.8.8</span></span>',
+      '<span class="out">  Location   : <span class="out-val">Ashburn, Virginia, United States</span></span>',
+      '<span class="out">  ISP        : <span class="out-val">Google LLC</span></span>',
+      '<span class="out">  Timezone   : <span class="out-val">America/New_York</span></span>',
+    ]
+  },
+  {
+    cmd: "python net_check.py --file hosts.csv",
+    output: [
+      '<span class="out">  <span class="out-val" style="color:#22C55E">REACHABLE</span>  192.168.1.1   port 22   12ms</span>',
+      '<span class="out">  <span class="out-val" style="color:#22C55E">REACHABLE</span>  10.0.0.254    port 80   8ms</span>',
+      '<span class="out">  <span class="out-val" style="color:#F87171">TIMEOUT </span>   172.16.0.5    port 443</span>',
+    ]
+  },
+  {
+    cmd: "python az_inventory.py --group prod-rg",
+    output: [
+      '<span class="out">  Authenticated via DefaultAzureCredential</span>',
+      '<span class="out">  Found <span class="out-val">14 resources</span> in prod-rg</span>',
+      '<span class="out">  Exported to <span class="out-val">azure_inventory_20260626.csv</span></span>',
+    ]
+  }
+];
+
+let seqIdx = 0;
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runSequence() {
+  const { cmd, output } = sequences[seqIdx % sequences.length];
+  seqIdx++;
+
+  const typedEl = document.getElementById("typed-cmd");
+  const cursorEl = document.getElementById("cursor");
+  const bodyEl = document.getElementById("terminal-output");
+
+  typedEl.textContent = "";
+  cursorEl.style.display = "inline-block";
+
+  // Remove old output lines
+  bodyEl.querySelectorAll(".out,.out-line").forEach(el => el.remove());
+
+  // Type the command
+  for (let i = 0; i < cmd.length; i++) {
+    typedEl.textContent += cmd[i];
+    await sleep(38 + Math.random() * 24);
+  }
+
+  await sleep(300);
+  cursorEl.style.display = "none";
+
+  // Show output lines
+  for (const line of output) {
+    await sleep(120);
+    const div = document.createElement("div");
+    div.innerHTML = line;
+    div.className = "out-line";
+    bodyEl.appendChild(div);
+  }
+
+  await sleep(2800);
+
+  // Fade out output
+  bodyEl.querySelectorAll(".out-line").forEach(el => {
+    el.style.transition = "opacity 0.4s";
+    el.style.opacity = "0";
+  });
+  typedEl.style.transition = "opacity 0.4s";
+  typedEl.style.opacity = "0";
+
+  await sleep(450);
+
+  typedEl.style.opacity = "1";
+  typedEl.style.transition = "";
+  bodyEl.querySelectorAll(".out-line").forEach(el => el.remove());
+  cursorEl.style.display = "inline-block";
+
+  await sleep(500);
+  runSequence();
+}
+
+runSequence();
+</script>
+</body>
+</html>
